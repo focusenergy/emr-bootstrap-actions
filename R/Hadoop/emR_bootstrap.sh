@@ -96,6 +96,7 @@ done
 
 # install latest R version from AWS Repo
 sudo yum install -y R
+sudo mkdir -pv /usr/local/lib/R/site-library
 
 # create rstudio user on all machines
 # we need a unix user with home directory and password and hadoop permission
