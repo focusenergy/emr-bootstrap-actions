@@ -192,7 +192,7 @@ EOF
 
 
 # install rmr2 package if requested
-if [ "$RHDFS" = true ]; then
+if [ "$RMR2" = true ]; then
 	rm -rf RHadoop
 	mkdir RHadoop
 	cd RHadoop
