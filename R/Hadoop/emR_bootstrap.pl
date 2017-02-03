@@ -37,6 +37,7 @@ GetOptions('standard-packages!' => \(my $standard_packages = 1),
 	   'r-site-lib=s' => \(my $r_site_lib = '/usr/local/lib/R/site-library'),
 	   'user=s' => \(my $user = 'rstudio'),
 	   'userpw=s' => \(my $userpw = 'rstudio'),
+	   'sparklyr!' => \(my $sparklyr = 0),
 	   'rmr2!' => \(my $rmr2 = 0),
 	   'plyrmr2!' => \(my $plyrmr2 = 0),
 	   'rhdfs!' => \(my $rhdfs = 0),
@@ -125,6 +126,11 @@ if ($rhdfs) {
 
 if ($plyrmr2) {
   ensure_pkg_from_github('RevolutionAnalytics/plyrmr');
+}
+
+if ($sparklyr) {
+  # For now, need latest sparklyr bleeding-edge to support Spark 2.1.0.
+  ensure_pkg_from_github('RStudio/sparklyr');
 }
 
 do_system(qw(chown -R), $user, $r_site_lib);
