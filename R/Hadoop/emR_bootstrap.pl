@@ -96,6 +96,8 @@ my %hadoop_env = (HADOOP_HOME => '/home/hadoop',
 		  SPARK_HOME => '/usr/lib/spark');
 %ENV = (%ENV, %hadoop_env);
 spew(">> /etc/profile", map "export $_=$hadoop_env{$_}", keys %hadoop_env);
+spew(">> /usr/lib64/R/etc/Renviron.site", map "$_=$hadoop_env{$_}", keys %hadoop_env);
+
 
 
 # fix hadoop tmp permission
