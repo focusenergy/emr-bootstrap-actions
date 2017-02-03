@@ -65,7 +65,6 @@ sudo(qw(mkdir -p), $r_site_lib);
 # we need a unix user with home directory and password and hadoop permission
 sudo('adduser', $user);
 do_system(qq{echo "$user:$userpw" | sudo chpasswd});
-sudo(qw(chown -R), $user, $r_site_lib);
 
 # ensure the rstudio user has write permissions for hadoop scratch space
 sudo(qw(usermod -a -G hadoop), $user);
@@ -126,3 +125,5 @@ if ($rhdfs) {
 if ($plyrmr2) {
   ensure_pkg_from_url('plyrmr', "https://raw.github.com/RevolutionAnalytics/plyrmr/master/build/plyrmr_0.3.0.tar.gz");
 }
+
+sudo(qw(chown -R), $user, $r_site_lib);
