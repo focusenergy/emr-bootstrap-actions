@@ -80,7 +80,7 @@ if ($is_master && $rstudio) {
   sudo(qw(ln -s /lib64/libcrypto.so.10 /lib64/libcrypto.so.6));
   sudo(qw(ln -s /usr/lib64/libssl.so.10 /lib64/libssl.so.6));
 
-  my $rstudio_url = 'https://s3.amazonaws.com/rstudio-server/rstudio-server-rhel5-0.99.903-x86_64.rpm';
+  my $rstudio_url = 'https://download2.rstudio.org/rstudio-server-rhel-1.0.136-x86_64.rpm';
   do_system(qq{wget $rstudio_url -O rstudio.rpm && sudo yum install -y --nogpgcheck rstudio.rpm && rm rstudio.rpm});
 
   # change port - 8787 will not work for many companies
