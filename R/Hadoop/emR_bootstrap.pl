@@ -116,15 +116,15 @@ if ($standard_packages) {
 ensure_pkg(@extra_packages);
 
 if ($rmr2) {
-  ensure_pkg_from_url('rmr2', "https://raw.github.com/RevolutionAnalytics/rmr2/master/build/rmr2_3.1.2.tar.gz");
+  ensure_pkg_from_github('RevolutionAnalytics/rmr2');
 }
 
 if ($rhdfs) {
-  ensure_pkg_from_url('rhdfs', "https://raw.github.com/RevolutionAnalytics/rhdfs/master/build/rhdfs_1.0.8.tar.gz");
+  ensure_pkg_from_github('RevolutionAnalytics/rhdfs');
 }
 
 if ($plyrmr2) {
-  ensure_pkg_from_url('plyrmr', "https://raw.github.com/RevolutionAnalytics/plyrmr/master/build/plyrmr_0.3.0.tar.gz");
+  ensure_pkg_from_github('RevolutionAnalytics/plyrmr');
 }
 
 do_system(qw(chown -R), $user, $r_site_lib);
