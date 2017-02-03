@@ -1,6 +1,6 @@
 #/usr/bin/perl
 
-eval 'exec /usr/bin/perl -w -S $0 ${1+"$@"}'
+eval 'exec sudo /usr/bin/perl -w -S $0 ${1+"$@"}'
 if 0; # not running under some shell
 
 # AWS EMR bootstrap script
@@ -58,16 +58,16 @@ if (-e '/mnt/var/lib/info/instance.json') {
 
 
 # install latest R version from AWS Repo
-sudo(qw(yum install -y R));
-sudo(qw(mkdir -p), $r_site_lib);
+do_system(qw(yum install -y R));
+do_system(qw(mkdir -p), $r_site_lib);
 
 # create rstudio user on all machines
 # we need a unix user with home directory and password and hadoop permission
-sudo('adduser', $user);
-do_system(qq{echo "$user:$userpw" | sudo chpasswd});
+do_system('adduser', $user);
+do_system(qq{echo "$user:$userpw" | chpasswd});
 
 # ensure the rstudio user has write permissions for hadoop scratch space
-sudo(qw(usermod -a -G hadoop), $user);
+do_system(qw(usermod -a -G hadoop), $user);
 
 # install rstudio
 # only run if master node
@@ -76,15 +76,15 @@ if ($is_master && $rstudio) {
   # install Rstudio server
 
   # needed on Amazon Linux to make RStudio Server talk to OpenSSL
-  sudo(qw(ln -s /lib64/libcrypto.so.10 /lib64/libcrypto.so.6));
-  sudo(qw(ln -s /usr/lib64/libssl.so.10 /lib64/libssl.so.6));
+  symlink('/lib64/libcrypto.so.10', '/lib64/libcrypto.so.6');
+  symlink('/usr/lib64/libssl.so.10', '/lib64/libssl.so.6');
 
   my $rstudio_url = 'https://download2.rstudio.org/rstudio-server-rhel-1.0.136-x86_64.rpm';
-  do_system(qq{wget $rstudio_url -O rstudio.rpm && sudo yum install -y --nogpgcheck rstudio.rpm && rm rstudio.rpm});
+  do_system(qq{wget $rstudio_url -O rstudio.rpm && yum install -y --nogpgcheck rstudio.rpm && rm rstudio.rpm});
 
   # change port - 8787 will not work for many companies
-  sudo(qq{sh -c 'echo www-port=$rstudio_port >> /etc/rstudio/rserver.conf'});
-  sudo(qw(rstudio-server restart));
+  do_system(qq{sh -c 'echo www-port=$rstudio_port >> /etc/rstudio/rserver.conf'});
+  do_system(qw(rstudio-server restart));
 }
 
 # set unix environment variables
@@ -93,24 +93,24 @@ my %hadoop_env = (HADOOP_HOME => '/home/hadoop',
 		  HADOOP_STREAMING => '/home/hadoop/contrib/streaming/hadoop-streaming.jar',
 		  JAVA_HOME => '/usr/lib/jvm/java');
 %ENV = (%ENV, %hadoop_env);
-sudo(qq{sh -c "echo 'export $_=$hadoop_env{$_}' >> /etc/profile"}) for keys %hadoop_env;
+do_system(qq{echo 'export $_=$hadoop_env{$_}' >> /etc/profile}) for keys %hadoop_env;
 
 
 # fix hadoop tmp permission
-sudo(qw{chmod 777 -R /mnt/var/lib/hadoop/tmp});
+do_system(qw{chmod 777 -R /mnt/var/lib/hadoop/tmp});
 
 
 # RCurl package needs curl-config unix package
-sudo(qw{yum install -y curl-devel});
+do_system(qw{yum install -y curl-devel});
 
 
 # fix java binding - R and packages have to be compiled with the same java version as hadoop
-sudo(qw{R CMD javareconf});
+do_system(qw{R CMD javareconf});
 
 
 # install required packages
 if ($standard_packages) {
-  do_system("aws s3 cp $std_packages_s3 /tmp/r-packages.tgz && cd $r_site_lib && sudo tar -zxvf /tmp/r-packages.tgz");
+  do_system("aws s3 cp $std_packages_s3 /tmp/r-packages.tgz && cd $r_site_lib && tar -zxvf /tmp/r-packages.tgz");
 }
 ensure_pkg(@extra_packages);
 
@@ -126,4 +126,4 @@ if ($plyrmr2) {
   ensure_pkg_from_url('plyrmr', "https://raw.github.com/RevolutionAnalytics/plyrmr/master/build/plyrmr_0.3.0.tar.gz");
 }
 
-sudo(qw(chown -R), $user, $r_site_lib);
+do_system(qw(chown -R), $user, $r_site_lib);
