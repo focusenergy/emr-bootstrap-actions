@@ -91,7 +91,8 @@ if ($is_master && $rstudio) {
 my %hadoop_env = (HADOOP_HOME => '/home/hadoop',
 		  HADOOP_CMD => '/home/hadoop/bin/hadoop',
 		  HADOOP_STREAMING => '/home/hadoop/contrib/streaming/hadoop-streaming.jar',
-		  JAVA_HOME => '/usr/lib/jvm/java');
+		  JAVA_HOME => '/usr/lib/jvm/java',
+		  SPARK_HOME => '/usr/lib/spark');
 %ENV = (%ENV, %hadoop_env);
 spew(">> /etc/profile", map "export $_=$hadoop_env{$_}", keys %hadoop_env);
 
