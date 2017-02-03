@@ -83,7 +83,7 @@ if ($is_master && $rstudio) {
   do_system(qq{wget $rstudio_url -O rstudio.rpm && yum install -y --nogpgcheck rstudio.rpm && rm rstudio.rpm});
 
   # change port - 8787 will not work for many companies
-  do_system(qq{sh -c 'echo www-port=$rstudio_port >> /etc/rstudio/rserver.conf'});
+  spew(">> /etc/rstudio/rserver.conf", "www-port=$rstudio_port");
   do_system(qw(rstudio-server restart));
 }
 
@@ -93,7 +93,7 @@ my %hadoop_env = (HADOOP_HOME => '/home/hadoop',
 		  HADOOP_STREAMING => '/home/hadoop/contrib/streaming/hadoop-streaming.jar',
 		  JAVA_HOME => '/usr/lib/jvm/java');
 %ENV = (%ENV, %hadoop_env);
-do_system(qq{echo 'export $_=$hadoop_env{$_}' >> /etc/profile}) for keys %hadoop_env;
+spew(">> /etc/profile", map "export $_=$hadoop_env{$_}", keys %hadoop_env);
 
 
 # fix hadoop tmp permission
