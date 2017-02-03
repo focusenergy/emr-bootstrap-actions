@@ -42,7 +42,7 @@ GetOptions('standard-packages!' => \(my $standard_packages = 1),
 	   'rhdfs!' => \(my $rhdfs = 0),
 	   'updateR!' => \(my $updateR = 0),
 	   );
-@extra_packages = split /,/, join ',', @extra_packages;
+@extra_packages = split /[,;:]/, join ',', @extra_packages;
 
 if ($common_pl) {
   system(qw(aws s3 cp), $common_pl, 'common.pl');
