@@ -138,4 +138,4 @@ if ($sparklyr) {
 do_system(qw(yum install -y git));
 do_system(qq{wget https://github.com/apache/spark/archive/master.zip && unzip master.zip && cd spark-master/R/pkg && Rscript -e 'devtools::document(); devtools::install()'});
 
-do_system(qw(chown -R), $user, $r_site_lib);
+do_system(qw(chown -R), "$user:$user", $r_site_lib);
