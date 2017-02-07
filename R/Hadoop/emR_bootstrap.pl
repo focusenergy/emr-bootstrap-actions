@@ -93,7 +93,8 @@ my %hadoop_env = (HADOOP_HOME => '/home/hadoop',
 		  HADOOP_CMD => '/home/hadoop/bin/hadoop',
 		  HADOOP_STREAMING => '/home/hadoop/contrib/streaming/hadoop-streaming.jar',
 		  JAVA_HOME => '/usr/lib/jvm/java',
-		  SPARK_HOME => '/usr/lib/spark');
+		  SPARK_HOME => '/usr/lib/spark',
+		  R_LIBS => '/usr/lib/spark/R/lib');
 %ENV = (%ENV, %hadoop_env);
 spew(">> /etc/profile", map "export $_=$hadoop_env{$_}", keys %hadoop_env);
 spew(">> /usr/lib64/R/etc/Renviron.site", map "$_=$hadoop_env{$_}", keys %hadoop_env);
