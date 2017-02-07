@@ -93,8 +93,7 @@ my %hadoop_env = (HADOOP_HOME => '/home/hadoop',
 		  HADOOP_CMD => '/home/hadoop/bin/hadoop',
 		  HADOOP_STREAMING => '/home/hadoop/contrib/streaming/hadoop-streaming.jar',
 		  JAVA_HOME => '/usr/lib/jvm/java',
-		  SPARK_HOME => '/usr/lib/spark',
-		  R_LIBS => '/usr/lib/spark/R/lib');
+		  SPARK_HOME => '/usr/lib/spark');
 %ENV = (%ENV, %hadoop_env);
 spew(">> /etc/profile", map "export $_=$hadoop_env{$_}", keys %hadoop_env);
 spew(">> /usr/lib64/R/etc/Renviron.site", map "$_=$hadoop_env{$_}", keys %hadoop_env);
@@ -135,5 +134,8 @@ if ($sparklyr) {
   # For now, need latest sparklyr bleeding-edge to support Spark 2.1.0.
   ensure_pkg_from_github('RStudio/sparklyr');
 }
+
+do_system(qw(yum install -y git));
+do_system(qq{wget https://github.com/apache/spark/archive/master.zip && unzip master.zip && cd spark-master/R/pkg && Rscript -e 'devtools::document(); devtools::install()'});
 
 do_system(qw(chown -R), $user, $r_site_lib);
